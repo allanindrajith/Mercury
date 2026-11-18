@@ -98,7 +98,7 @@ export const VIEW_LAYOUTS: Record<IslandViewName, ViewLayout> = {
   wardrobe: { height: 160, botX: 68, botY: null, botDiameter: 58, agentMode: "none" },
   // New version: Mochi on the left, the version and Update now (Mac: .update).
   update: { height: 160, botX: 62, botY: null, botDiameter: 58, agentMode: "none" },
-  // After an update: what the new version brings, then "Your Coucou so far".
+  // After an update: what the new version brings, then "Your Mercury so far".
   // Taller than a card, for two rows of items with their line (and, on the
   // second step, the Botan line under the thanks).
   whatsNew: { height: 248, botX: 62, botY: null, botDiameter: 58, agentMode: "none" },

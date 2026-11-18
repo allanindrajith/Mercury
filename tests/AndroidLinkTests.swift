@@ -5,7 +5,7 @@ import Security
 // Checks the Mac side of the Android link against the vectors of the Windows/Linux server
 // (windows/src-tauri/src/phone_link/: pairing.rs, discovery.rs, admission.rs, hub.rs, server.rs) and
 // the Android client (ProtocolTest.kt): the bytes the Mac produces must be the bytes the phone expects.
-// Compiled by scripts/test-android-link.sh with the pure files of NotchBuddy/Sources/App/AndroidLink/.
+// Compiled by scripts/test-android-link.sh with the pure files of Mercury/Sources/App/AndroidLink/.
 
 nonisolated(unsafe) var failures = 0
 func check(_ condition: @autoclosure () -> Bool, _ what: String, line: Int = #line) {
@@ -83,7 +83,7 @@ enum AndroidLinkTests {
     static func pairing(_ P: AndroidLinkProtocol.Type) {
         let link = P.pairingLink(host: "192.168.1.20", port: 47821, fingerprint: String(repeating: "ab", count: 32),
                                  token: "tok_en-1234567890abcd", name: "Léa's PC & co")
-        check(link == "coucou://pair?v=1&host=192.168.1.20&port=47821&fp=\(String(repeating: "ab", count: 32))&token=tok_en-1234567890abcd&name=L%C3%A9a%27s%20PC%20%26%20co",
+        check(link == "mercury://pair?v=1&host=192.168.1.20&port=47821&fp=\(String(repeating: "ab", count: 32))&token=tok_en-1234567890abcd&name=L%C3%A9a%27s%20PC%20%26%20co",
               "pairing link vector (pairing.rs)")
         check(P.isToken(String(repeating: "a", count: 16)), "16 chars")
         check(P.isToken(String(repeating: "A-_9", count: 32)), "128 chars of the alphabet")
@@ -108,9 +108,9 @@ enum AndroidLinkTests {
         check(P.fingerprintId("abcd") == nil && P.fingerprintId("") == nil, "too short")
         check(P.txtRecord(fingerprint: fp) == ["v": "1", "fp": "ab12cd34ef56ab78"], "TXT: v and fp, nothing else")
         check(P.txtRecord(fingerprint: "not a fingerprint") == nil, "no TXT without a fingerprint")
-        check(P.serviceType == "_coucou._tcp", "service type")
+        check(P.serviceType == "_mercury._tcp", "service type")
         check(P.instanceName("Rhytam's Mac") == "Rhytam's Mac", "instance is the name")
-        check(P.instanceName("   ") == "Coucou", "empty name")
+        check(P.instanceName("   ") == "Mercury", "empty name")
         check(P.instanceName(String(repeating: "x", count: 100)).count == 48, "name cut at 48")
     }
 
@@ -258,7 +258,7 @@ enum AndroidLinkTests {
         check(first.fingerprint.count == 64 && first.fingerprint == AndroidLinkProtocol.sha256Hex(first.certificateDER), "fingerprint is the SHA-256 of the DER")
         // The system's own parser accepts it, and it carries the key we signed with.
         if let cert = SecCertificateCreateWithData(nil, first.certificateDER as CFData) {
-            check((SecCertificateCopySubjectSummary(cert) as String?) == "Coucou phone link", "subject")
+            check((SecCertificateCopySubjectSummary(cert) as String?) == "Mercury phone link", "subject")
             var trust: SecTrust?
             check(SecTrustCreateWithCertificates(cert, SecPolicyCreateBasicX509(), &trust) == errSecSuccess, "usable as a trust object")
         } else {

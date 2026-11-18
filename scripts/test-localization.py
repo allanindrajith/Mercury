@@ -7,7 +7,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
-CATALOG = ROOT / "NotchBuddy/Resources/Localizable.xcstrings"
+CATALOG = ROOT / "Mercury/Resources/Localizable.xcstrings"
 # shortcut: No catalog placeholder uses the space flag; support it when one is added.
 FORMAT = re.compile(r"%(?:\d+\$)?[-+#0]*(?:\d+|\*)?(?:\.(?:\d+|\*))?(?:hh|ll|[hljztL])?[@diuoxXfFeEgGaAcCsSp]")
 
@@ -53,12 +53,12 @@ def main():
                 errors.append(f"{key!r} {path}: incomplete translation")
             if arguments(unit["value"]) != arguments(target.get("value", "")):
                 errors.append(f"{key!r} {path}: format arguments differ")
-    project = (ROOT / "NotchBuddy/project.yml").read_text().split("\ntargets:\n", 1)[1]
-    for name in ("NotchBuddy", "CoucouAppStore"):
+    project = (ROOT / "Mercury/project.yml").read_text().split("\ntargets:\n", 1)[1]
+    for name in ("Mercury", "MercuryAppStore"):
         target = re.search(rf"^  {name}:\n(.*?)(?=^  \w+:|\Z)", project, re.M | re.S)
         if not target or not re.search(r"^          - zh-Hant$", target[1], re.M):
             errors.append(f"{name}: zh-Hant is missing from bundle localizations")
-    for path in (ROOT / "NotchBuddy/Sources").rglob("*.swift"):
+    for path in (ROOT / "Mercury/Sources").rglob("*.swift"):
         if any(part in {"Phone", "Widgets", "NotificationContent"} for part in path.parts):
             continue
         for literal in re.findall(r'(?:String\(localized:\s*|(?:Text|Button|Toggle|SecureField|TextField|Picker|Label|GroupBox|help|accessibilityLabel|navigationTitle)\(\s*)"((?:\\.|[^"\\])*)"', path.read_text()):

@@ -1,6 +1,6 @@
 // What's new after an update (whats-new/controller.ts decides when): first
 // what this version brings — an icon, a title and a line per item — then
-// "Your Coucou so far", the numbers this computer kept, and Buy Mochi a
+// "Your Mercury so far", the numbers this computer kept, and Buy Mochi a
 // coffee. Same left inset as the other cards, Mochi on the left.
 
 import { h, clear, svg } from "./dom";
@@ -9,44 +9,12 @@ import { Updates } from "../island/update";
 import { formatCount, formatDuration } from "../recap/summary";
 import { STAT_ICONS, WHATS_NEW_ICONS } from "../whats-new/icons";
 import { WhatsNew } from "../whats-new/controller";
-import { BOTAN_URL, COFFEE_URL, iconName, localized, releasePage, type Stat } from "../whats-new/whats-new";
+import { COFFEE_URL, iconName, localized, releasePage, type Stat } from "../whats-new/whats-new";
 import type { ViewHost } from "./views";
 import { language, t } from "../i18n/i18n";
 
 function btn(label: string, kind: "primary" | "secondary", onClick: () => void): HTMLButtonElement {
   return h("button", { class: `btn ${kind}`, onclick: onClick }, h("span", { text: label }));
-}
-
-const SVG_NS = "http://www.w3.org/2000/svg";
-
-/** Botan's mark, as on louisraille.fr/botan: a ring, its dot off-centre, looking at the tilted pill. */
-function botanMark(size: number): SVGSVGElement {
-  const el = document.createElementNS(SVG_NS, "svg");
-  el.setAttribute("viewBox", "664.68 437.68 953.64 953.64");
-  el.setAttribute("width", String(size));
-  el.setAttribute("height", String(size));
-  el.setAttribute("aria-hidden", "true");
-  const add = (tag: string, attrs: Record<string, string>) => {
-    const node = document.createElementNS(SVG_NS, tag);
-    for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
-    el.append(node);
-  };
-  add("circle", { cx: "1000", cy: "1000", r: "255", fill: "none", stroke: "currentColor", "stroke-width": "90" });
-  add("circle", { cx: "1070.92", cy: "944.59", r: "81", fill: "currentColor" });
-  add("rect", {
-    x: "1251.84", y: "573.69", width: "345", height: "189.56", rx: "94.78", fill: "currentColor",
-    transform: "rotate(-34.95 1424.34 668.47)",
-  });
-  return el;
-}
-
-/** "Botan: Mochi is leaving the notch. Join the founders ↗": one line, the founders list. */
-function botanLink(): HTMLButtonElement {
-  return h("button", { class: "whatsnew-botan", onclick: () => WhatsNew.openBotan(BOTAN_URL) },
-    h("span", { class: "whatsnew-botan-mark" }, botanMark(12)),
-    h("span", { class: "whatsnew-botan-text", text: t("Botan: Mochi is leaving the notch.") }),
-    h("span", { class: "whatsnew-botan-join", text: `${t("Join the founders")} ↗` }),
-  );
 }
 
 const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
@@ -95,7 +63,7 @@ export function buildWhatsNew(): ViewHost {
     }
     const page = releasePage(Updates.status.platform, release.version);
     stack.append(
-      h("div", { class: "title one-line", text: t("You're on Coucou {version}", { version: release.version }) }),
+      h("div", { class: "title one-line", text: t("You're on Mercury {version}", { version: release.version }) }),
       grid,
       h("div", { class: "actions" },
         btn(t("Next"), "primary", () => WhatsNew.next()),
@@ -115,13 +83,12 @@ export function buildWhatsNew(): ViewHost {
         ),
       ));
     }
-    stack.append(h("div", { class: "title one-line", text: t("Your Coucou so far") }));
+    stack.append(h("div", { class: "title one-line", text: t("Your Mercury so far") }));
     if (WhatsNew.stats.length > 0) stack.append(chips);
     stack.append(
-      h("div", { class: "sub whatsnew-thanks", text: t("Coucou is free and open source. If it saves you time, you can buy Mochi a coffee.") }),
-      botanLink(),
+      h("div", { class: "sub whatsnew-thanks", text: t("Mercury is free and open source. If it saves you time, you can buy Mercury a coffee.") }),
       h("div", { class: "actions" },
-        btn(`☕ ${t("Buy Mochi a coffee")}`, "primary", () => WhatsNew.openCoffee(COFFEE_URL)),
+        btn(`☕ ${t("Buy Mercury a coffee")}`, "primary", () => WhatsNew.openCoffee(COFFEE_URL)),
         btn(t("OK"), "secondary", () => WhatsNew.done()),
       ),
     );

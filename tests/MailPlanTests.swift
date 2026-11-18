@@ -13,7 +13,7 @@ enum MailPlanTests {
         let answer = """
         Je prépare les 3 envois.
 
-        ```coucou-mail
+        ```mercury-mail
         {"summary": "3 mails", "actions": [
           {"type": "junk", "messages": [2, 3]},
           {"type": "move", "messages": 4, "mailbox": "Compta"},
@@ -30,7 +30,7 @@ enum MailPlanTests {
         let r = MailPlanParser.extract(answer)
         precondition(r.error == nil, r.error ?? "")
         precondition(r.prose == "Je prépare les 3 envois.\n\n\nClique sur Lancer." || r.prose.hasPrefix("Je prépare"), r.prose)
-        precondition(!r.prose.contains("coucou-mail") && r.prose.contains("Clique sur Lancer."))
+        precondition(!r.prose.contains("mercury-mail") && r.prose.contains("Clique sur Lancer."))
         let plan = r.plan!
         precondition(plan.summary == "3 mails" && plan.actions.count == 6)
         precondition(plan.actions[0] == .sort(.junk, messages: [2, 3]))
@@ -44,11 +44,11 @@ enum MailPlanTests {
         precondition(plan.sendCount == 3)
         // No block, a block still streaming, a broken block.
         precondition(MailPlanParser.extract("Hello").plan == nil && MailPlanParser.extract("Hello").prose == "Hello")
-        let streaming = MailPlanParser.extract("Ok\n```coucou-mail\n{\"actions\": [")
+        let streaming = MailPlanParser.extract("Ok\n```mercury-mail\n{\"actions\": [")
         precondition(streaming.plan == nil && streaming.error == nil && streaming.prose == "Ok")
-        let broken = MailPlanParser.extract("Ok\n```coucou-mail\n{\"actions\": [{\"type\": \"send\"}]}\n```")
+        let broken = MailPlanParser.extract("Ok\n```mercury-mail\n{\"actions\": [{\"type\": \"send\"}]}\n```")
         precondition(broken.plan == nil && broken.error!.contains("needs \"to\""))
-        let unknown = MailPlanParser.extract("```coucou-mail\n{\"actions\": [{\"type\": \"delete\", \"messages\": [1]}]}\n```")
+        let unknown = MailPlanParser.extract("```mercury-mail\n{\"actions\": [{\"type\": \"delete\", \"messages\": [1]}]}\n```")
         precondition(unknown.error!.contains("unknown type"), "no delete action exists")
     }
 
@@ -80,7 +80,7 @@ enum MailPlanTests {
         precondition(s.contains("Accounts: Pro <louis@pro.fr>"))
         precondition(s.contains("[1] ") && s.contains("unread") && s.contains("attachments: plans.pdf"))
         precondition(s.contains("text: Voici les plans") && s.hasSuffix("</mail>"))
-        precondition(MailAgentPrompt.instructions.contains("coucou-mail") && MailAgentPrompt.instructions.contains("Never invent an address"))
+        precondition(MailAgentPrompt.instructions.contains("mercury-mail") && MailAgentPrompt.instructions.contains("Never invent an address"))
         let hits = MailAgentPrompt.mentioned(in: "le mail de Martin avec les plans",
                                              senders: ["Anne <a@x.fr>", "Martin <m@archi.fr>", "Paul"],
                                              subjects: ["Plans", "Plans franchisés", "Hello"])

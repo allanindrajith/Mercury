@@ -1,4 +1,4 @@
-// Mochi — direct port of NotchBuddy/Sources/App/BotEngine.swift to Canvas 2D.
+// Mochi — direct port of Mercury/Sources/App/BotEngine.swift to Canvas 2D.
 // Same constants, same tweens, same easings, same particles. The only intentional
 // difference is the `happy`/`wink` eye arc, which follows the prototype
 // (design/prototype/notch-buddy.html, the visual source of truth) — the Swift
@@ -199,7 +199,7 @@ export class BotEngine {
   /** Solid body colour for mini bots / integration pills (null = Mochi gradient). */
   bodyColor: RGB | null = null;
   /**
-   * A new Coucou waits (whats-new/whats-new.ts): while Mochi is idle or asleep
+   * A new Mercury waits (whats-new/whats-new.ts): while Mochi is idle or asleep
    * he wears the up-arrow badge. The island turns his body blue alongside.
    */
   private updateHint: RGB | null = null;
@@ -396,7 +396,7 @@ export class BotEngine {
     this.anim("roll", [[Math.PI * 2 * turns, durationMs, Ease.inOut]], () => { this.roll = 0; });
   }
 
-  /** Peek wave — the "coucou". Timings from BotEngine.greet(). */
+  /** Peek wave — the "mercury". Timings from BotEngine.greet(). */
   greet() {
     const t = now();
     const tok = ++this.greetToken;
@@ -1236,7 +1236,7 @@ export class BotEngine {
         }
       }
     } else if (badge.kind === "arrow") {
-      // The "!" badge's ring and disc, with a white up-arrow: a new Coucou is out.
+      // The "!" badge's ring and disc, with a white up-arrow: a new Mercury is out.
       x.fillStyle = "#000";
       x.beginPath();
       x.arc(0, 0, R * 0.3, 0, Math.PI * 2);

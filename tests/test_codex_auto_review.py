@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def relay_source():
     """The full generated GitHub relay as runnable Python (Swift escapes undone)."""
-    source = (ROOT / 'NotchBuddy/Sources/App/HookServer.swift').read_text()
+    source = (ROOT / 'Mercury/Sources/App/HookServer.swift').read_text()
     body = source.split('private let nbHookPythonGitHub = """\n', 1)[1].split('\n"""', 1)[0]
     return body.replace('\\\\', '\\')
 
@@ -184,7 +184,7 @@ class AutoReviewTests(unittest.TestCase):
 class RelaySubprocessTests(unittest.TestCase):
     """Run the actual extracted relay as a subprocess against an isolated socket.
 
-    The relay always connects to ~/Library/Application Support/NotchBuddy/nb.sock, so
+    The relay always connects to ~/Library/Application Support/Mercury/nb.sock, so
     the subprocess gets a throwaway HOME (kept short for the sockaddr_un limit) and a
     throwaway CODEX_HOME. Neither the production socket nor the real ~/.codex is ever
     touched, and no native Codex configuration is written.
@@ -201,7 +201,7 @@ class RelaySubprocessTests(unittest.TestCase):
         self.transcript = self.codex_home / 'sessions/rollout.jsonl'
         self.relay = self.root / 'nb-hook.py'
         self.relay.write_text(relay_source(), encoding='utf-8')
-        self.socket_path = self.home / 'Library/Application Support/NotchBuddy/nb.sock'
+        self.socket_path = self.home / 'Library/Application Support/Mercury/nb.sock'
         self.socket_path.parent.mkdir(parents=True)
         self.server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.server.bind(str(self.socket_path))
@@ -210,9 +210,9 @@ class RelaySubprocessTests(unittest.TestCase):
         self.addCleanup(self.server.close)
 
     def _isolated_root(self):
-        # The fake HOME has to keep ~/Library/Application Support/NotchBuddy/nb.sock
+        # The fake HOME has to keep ~/Library/Application Support/Mercury/nb.sock
         # within sockaddr_un, so prefer a short base directory when one is available.
-        suffix = '/Library/Application Support/NotchBuddy/nb.sock'
+        suffix = '/Library/Application Support/Mercury/nb.sock'
         for base in ('/tmp', tempfile.gettempdir(), str(ROOT)):
             try:
                 root = Path(tempfile.mkdtemp(prefix='nbhook-relay-', dir=base))
@@ -352,7 +352,7 @@ class RelaySubprocessTests(unittest.TestCase):
         received, out, code = self.run_relay_with_ask(self.payload())
         self.assertEqual(code, 0)
         self.assertEqual(out, b'')
-        self.assertEqual(received['coucou_agent'], 'codex')
+        self.assertEqual(received['mercury_agent'], 'codex')
         self.assertEqual(received['hook_event_name'], 'PermissionRequest')
         self.assertEqual(received['session_id'], 'root')
         self.assertEqual(received['tool_name'], 'Bash')

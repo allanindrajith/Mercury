@@ -1,12 +1,12 @@
 # Android link (protocol v1)
 
-How *Coucou for Android* talks to a desktop Coucou. The iPhone uses iCloud (CloudKit) and Apple
+How *Mercury for Android* talks to a desktop Mercury. The iPhone uses iCloud (CloudKit) and Apple
 push, neither of which exists on Android, so the Android app connects to the desktop directly over
 the local network.
 
 Status: the Android client, `android/tools/dev-desktop.mjs` (a stand-in desktop for testing), the
 real desktop server of the Windows/Linux app (`windows/src-tauri/src/phone_link/`) and the Mac app
-(`NotchBuddy/Sources/App/AndroidLink/`) implement this.
+(`Mercury/Sources/App/AndroidLink/`) implement this.
 
 ## Transport
 
@@ -21,7 +21,7 @@ real desktop server of the Windows/Linux app (`windows/src-tauri/src/phone_link/
 The desktop shows a QR code (and a copyable link) containing:
 
 ```
-coucou://pair?v=1&host=192.168.1.20&port=47821&fp=<sha256 hex of the TLS certificate>&token=<secret>&name=<desktop name>
+mercury://pair?v=1&host=192.168.1.20&port=47821&fp=<sha256 hex of the TLS certificate>&token=<secret>&name=<desktop name>
 ```
 
 - `token` is 16 to 128 characters of `[A-Za-z0-9_-]`, random, created per pairing. It is the shared
@@ -29,7 +29,7 @@ coucou://pair?v=1&host=192.168.1.20&port=47821&fp=<sha256 hex of the TLS certifi
   with a key from the Android Keystore.
 - The app can read the QR code itself ("Scan QR code" on the pairing card; CameraX for the preview, zxing-core to
   decode, no Play services). Scanning the QR with the phone's own camera app also opens the link in the app (the
-  app registers the `coucou://pair` scheme). Either way the app names the computer and asks the user to confirm
+  app registers the `mercury://pair` scheme). Either way the app names the computer and asks the user to confirm
   before it pairs; the link can also be pasted. The camera is used only on the scan screen and nothing is stored or sent.
 - Unpairing on either side deletes the token. The desktop should accept one token per phone and let
   the user revoke it.
@@ -271,10 +271,10 @@ What it does not do: a device that floods from many addresses at once can still 
 for a few seconds at a time; it cannot keep out the phone that is already paired. A wrong token still costs the caller
 a pause and is never admitted.
 
-## Mochi's outfit (optional capability `prefs`)
+## Mercury's outfit (optional capability `prefs`)
 
 A phone that sends `caps: ["prefs"]` in its `hello` is offered `prefs` in `welcome.caps` (no switch on the computer: what
-Mochi wears is no secret and says nothing about the user's work). It is then sent what the island's wardrobe says, right
+Mercury wears is no secret and says nothing about the user's work). It is then sent what the island's wardrobe says, right
 after the first `sessions` and again whenever it changes:
 
 ```json
@@ -285,7 +285,7 @@ after the first `sessions` and again whenever it changes:
 `pumpkin`, `santaHat`, `bunnyEars`: the PC's and the Mac's stored values, nothing else is ever sent (the computer checks the
 list; a test compares it with `windows/src/mochi/wardrobe.ts`). `auto` means "dress for the season": **the phone applies the
 seasons to its own calendar**, the computer sends no date. A phone ignores a value it does not know and keeps what it wore.
-The phone has its own choice too (Settings > Mochi's wardrobe): "Same as my computer" (default) or one outfit, which then wins.
+The phone has its own choice too (Settings > Mercury's wardrobe): "Same as my computer" (default) or one outfit, which then wins.
 Nothing goes back to the computer.
 
 ## Finding the computer again (optional, still protocol v1)
@@ -295,7 +295,7 @@ new router). So the computer can also announce itself on the local network, and 
 an addition: **v=1 is unchanged, the saved address stays the first thing tried, and an old phone or an old computer
 simply keeps using the saved address.**
 
-- **Announcement** (computer): while the phone link is on, DNS-SD over multicast DNS, service type `_coucou._tcp`,
+- **Announcement** (computer): while the phone link is on, DNS-SD over multicast DNS, service type `_mercury._tcp`,
   instance name = the computer's name, the real port, IPv4 address. Off means silent: when the switch is turned off, the
   link stops or the app quits, the announcement is withdrawn and nothing runs.
 - **TXT record**: `v=1` and `fp=<first 16 lowercase hex characters of the certificate's SHA-256>`. Nothing else. Never the
@@ -313,10 +313,10 @@ simply keeps using the saved address.**
      that copied the short id) is dropped and never saved. When the paired fingerprint is announced twice, the first that
      passes wins.
   5. The stored host and port are replaced; the token and the pinned fingerprint are untouched. The link reconnects.
-- If nothing is found, the phone says so calmly (same Wi-Fi? computer awake and Coucou running? firewall? hotspots and guest
+- If nothing is found, the phone says so calmly (same Wi-Fi? computer awake and Mercury running? firewall? hotspots and guest
   networks can block devices from finding each other, "client isolation") and offers to pair again or to type the address.
 - Limits, honestly: multicast does not cross routers or VPNs; some access points block it between clients; a firewall that
-  blocks UDP 5353 on the private profile hides the computer (the Windows prompt "allow Coucou on private networks" covers
+  blocks UDP 5353 on the private profile hides the computer (the Windows prompt "allow Mercury on private networks" covers
   it); two computers with the same certificate do not exist (each has its own).
 
 ## Behaviour rules (same as the other ports)
@@ -355,20 +355,20 @@ simply keeps using the saved address.**
 ## Mac implementation notes
 
 The Mac app speaks the same protocol v1 as the Windows/Linux one, in Swift with Network.framework, CryptoKit and Security only
-(`NotchBuddy/Sources/App/AndroidLink/`). The phone cannot tell a Mac from a PC (`welcome.os` is `macos`).
+(`Mercury/Sources/App/AndroidLink/`). The phone cannot tell a Mac from a PC (`welcome.os` is `macos`).
 
 - **Settings → Android phone**: off by default (`androidLinkEnabled`). Turning it on starts a TLS listener and a Bonjour announcement;
   turning it off, or quitting, stops both. While it is off nothing listens and no timer runs; while it is on the work is event driven
   (island changes are published after a short debounce, a phone's lines are handled as they arrive), with no polling. Not in the
   App Store build (the sandbox has no server entitlement); that build keeps the iPhone link only.
 - **Transport**: an `NWListener` on port 47821 (else any free port), IPv4 only, TLS 1.2 or 1.3, with the self-signed certificate
-  (ECDSA P-256, valid 2024 to 2124, common name `Coucou phone link`). Peers that are not on the local network are dropped before any byte
+  (ECDSA P-256, valid 2024 to 2124, common name `Mercury phone link`). Peers that are not on the local network are dropped before any byte
   is read. At most 8 connections, 10 s to say hello (3 s when the pool is filling up), 20 min idle, 64 KiB lines.
 - **Secrets**: the certificate, its key and the pairing token are generic-password items of the Keychain
   (`android-link-cert`, `android-link-key`, `android-link-token`), never a file and never UserDefaults. Network.framework needs a
   `SecIdentity`, so the key and certificate are also added to the Keychain as key and certificate items while the link runs and removed
   when it stops. Without a Keychain the link does not start. "Pair again" replaces the token and disconnects the phone that had the old one.
-- **Pairing code**: shown only after a click, as on the PC: a QR code (CoreImage) and the `coucou://pair` link with this Mac's LAN address.
+- **Pairing code**: shown only after a click, as on the PC: a QR code (CoreImage) and the `mercury://pair` link with this Mac's LAN address.
 - **Approvals**: the island's pending request is published with its queue id as the request id, so the fingerprint is
   `sha256(pillId, sessionId, tool, command, requestId)` joined by U+001F and asking for the same command twice gives two fingerprints.
   A phone's decision is applied only to the request still pending with that fingerprint, once, within 115 s, through
@@ -376,7 +376,7 @@ The Mac app speaks the same protocol v1 as the Windows/Linux one, in Swift with 
   `allow` for a command cut to 500 characters is ignored (the request stays pending), `deny` works.
 - **Admission**: the same numbers and rules as `admission.rs` (2 silent connections per address, 4 for strangers together, 8 remembered
   addresses, shorter waits when filling up), in `AndroidLinkAdmission.swift` with the same tests.
-- **Discovery**: `_coucou._tcp` with TXT `v=1` and `fp=<first 16 hex of the certificate SHA-256>`, nothing else, published by the listener
+- **Discovery**: `_mercury._tcp` with TXT `v=1` and `fp=<first 16 hex of the certificate SHA-256>`, nothing else, published by the listener
   itself, so it is withdrawn with it.
 - **Capabilities the Mac offers**, each only to a phone that asked for it and read again for every connection:
   `details` ("Show session details on the phone"), `answers` ("Let the phone answer Claude Code's questions") and `usage`
@@ -400,11 +400,11 @@ The Mac app speaks the same protocol v1 as the Windows/Linux one, in Swift with 
 - `android/tools/dev-desktop.mjs` pretends to be a desktop (needs `node` and `openssl`). With `--fake-chat` it offers
   `chat` with a fake provider (no key, no cost): `/error`, `/auth`, `/slow`, `/long` and `/rewrite` trigger the odd cases.
 - `DevDesktopInteropTest` runs the Android client against it.
-- `cargo test -p coucou phone_link` also tests the announcement (what is published and when, that no secret can be in it); the real multicast needs a real network and is not in the tests.
-- `cargo test -p coucou phone_link` tests the real server (wrong token, fingerprint mismatch, oversize
+- `cargo test -p mercury phone_link` also tests the announcement (what is published and when, that no secret can be in it); the real multicast needs a real network and is not in the tests.
+- `cargo test -p mercury phone_link` tests the real server (wrong token, fingerprint mismatch, oversize
   line, late decision, answered-at-the-desk, pairing again, local-network filter...).
 - `RustDesktopInteropTest` runs the Android client against the real Rust server
-  (`COUCOU_RUST_INTEROP=1`, needs cargo; the `Phone link` workflow does it).
+  (`MERCURY_RUST_INTEROP=1`, needs cargo; the `Phone link` workflow does it).
 
 ## Through a relay (optional capability `relay`)
 

@@ -85,7 +85,7 @@ test("on Windows the same folder in another letter case is the same project", ()
 
 test("a project is shown by its last folder name", () => {
   assert.equal(projectName("/home/me/my-app/"), "my-app");
-  assert.equal(projectName("C:\\code\\Coucou"), "Coucou");
+  assert.equal(projectName("C:\\code\\Mercury"), "Mercury");
   assert.equal(projectName("/"), "/");
 });
 
@@ -105,8 +105,8 @@ test("the launcher keeps its projects and the chosen folder in the webview's sto
   assert.deepEqual(b.projects, a.projects);
   assert.equal(b.folder, "/opt/picked");
 
-  storage.set("coucou.launch.projects", "{not json");
-  storage.delete("coucou.launch.folder");
+  storage.set("mercury.launch.projects", "{not json");
+  storage.delete("mercury.launch.folder");
   const c = new Launcher(false);
   assert.deepEqual(c.projects, []);
   assert.equal(c.folder, null);

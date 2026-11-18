@@ -1,6 +1,6 @@
 # Maintainer: Dorian Luyet (@DurianTheWAV)
 #
-# Coucou for Linux: the Tauri 2 app in windows/ (Rust + TypeScript), built from source.
+# Mercury for Linux: the Tauri 2 app in windows/ (Rust + TypeScript), built from source.
 # Exposed by the flake at the root of the repo (flake.nix); see "NixOS" in README.md.
 #
 # Nothing here needs touching for a release: the version is read from windows/Cargo.toml,
@@ -38,7 +38,7 @@
 let
   sherpaOnnxSys =
     lib.findFirst (p: p.name == "sherpa-onnx-sys")
-      (throw "coucou: sherpa-onnx-sys is missing from windows/Cargo.lock")
+      (throw "mercury: sherpa-onnx-sys is missing from windows/Cargo.lock")
       (lib.importTOML ../../windows/Cargo.lock).package;
   sherpaOnnxVersion = sherpaOnnxSys.version;
 
@@ -59,7 +59,7 @@ let
 
   sherpaOnnxArchive =
     sherpaOnnxArchives.${stdenv.hostPlatform.system}
-      or (throw "coucou: no sherpa-onnx build for ${stdenv.hostPlatform.system}");
+      or (throw "mercury: no sherpa-onnx build for ${stdenv.hostPlatform.system}");
 
   sherpaOnnxStatic = fetchzip {
     url = "https://github.com/k2-fsa/sherpa-onnx/releases/download/v${sherpaOnnxVersion}/sherpa-onnx-v${sherpaOnnxVersion}-linux-${sherpaOnnxArchive.arch}-static-lib.tar.bz2";
@@ -83,12 +83,12 @@ let
           ]
         )
       ))
-      ../../NotchBuddy/Resources/sounds
+      ../../Mercury/Resources/sounds
     ];
   };
 in
 stdenv.mkDerivation {
-  pname = "coucou";
+  pname = "mercury";
   version = (lib.importTOML ../../windows/Cargo.toml).workspace.package.version;
 
   inherit src;
@@ -103,16 +103,16 @@ stdenv.mkDerivation {
 
   # cargo-tauri.hook runs `cargo tauri build --bundles deb` from here, and the deb's
   # contents become $out. `npm run build` (Tauri's beforeBuildCommand) builds the
-  # front end and coucou-hook, which the bundle picks up from target/release.
+  # front end and mercury-hook, which the bundle picks up from target/release.
   buildAndTestSubdir = "src-tauri";
 
   env.SHERPA_ONNX_LIB_DIR = "${sherpaOnnxStatic}/lib";
 
-  # nixpkgs builds with CARGO_BUILD_TARGET set, so npm's prebuild puts coucou-hook in
+  # nixpkgs builds with CARGO_BUILD_TARGET set, so npm's prebuild puts mercury-hook in
   # target/<triple>/release, while tauri.linux.conf.json expects target/release.
   preBuild = ''
     mkdir -p target/release
-    ln -s ../${stdenv.hostPlatform.rust.cargoShortTarget}/release/coucou-hook target/release/coucou-hook
+    ln -s ../${stdenv.hostPlatform.rust.cargoShortTarget}/release/mercury-hook target/release/mercury-hook
   '';
 
   postPatch = ''
@@ -121,13 +121,13 @@ stdenv.mkDerivation {
       --replace-fail "libayatana-appindicator3.so.1" \
         "${libayatana-appindicator}/lib/libayatana-appindicator3.so.1"
 
-    # "Start at login" (~/.config/autostart/Coucou.desktop) and the command Settings
+    # "Start at login" (~/.config/autostart/Mercury.desktop) and the command Settings
     # shows for desktop shortcuts would record this build's own executable,
-    # /nix/store/…/bin/.coucou-wrapped: it skips the wrapper (GTK, GStreamer and TLS
-    # modules) and is gone after the next garbage collection. Use `coucou` from PATH.
+    # /nix/store/…/bin/.mercury-wrapped: it skips the wrapper (GTK, GStreamer and TLS
+    # modules) and is gone after the next garbage collection. Use `mercury` from PATH.
     substituteInPlace "$cargoDepsCopy"/tauri-plugin-autostart-*/src/lib.rs \
       --replace-fail "let current_exe = current_exe()?;" \
-        'let current_exe = std::path::PathBuf::from("coucou");'
+        'let current_exe = std::path::PathBuf::from("mercury");'
     substituteInPlace src-tauri/src/shortcuts.rs \
       --replace-fail ".or_else(|| std::env::current_exe().ok())" ""
   '';
@@ -168,7 +168,7 @@ stdenv.mkDerivation {
 
   preFixup = ''
     gappsWrapperArgs+=(
-      # xdg-open (links, files), gsettings (theme), gtk-launch (« OK Coucou » opens apps).
+      # xdg-open (links, files), gsettings (theme), gtk-launch (« OK Mercury » opens apps).
       --suffix PATH : ${
         lib.makeBinPath [
           glib
@@ -182,20 +182,20 @@ stdenv.mkDerivation {
   # For the flake's dev shell.
   passthru = { inherit sherpaOnnxStatic; };
 
-  # Coucou copies the relay from $out/lib/Coucou/coucou-hook to
-  # ~/.local/share/coucou/bin/ at each launch, so Claude Code's hooks keep a stable
+  # Mercury copies the relay from $out/lib/Mercury/mercury-hook to
+  # ~/.local/share/mercury/bin/ at each launch, so Claude Code's hooks keep a stable
   # path across updates rather than pointing into the Nix store.
 
   meta = {
     description = "Mochi lives at the top of your screen and keeps an eye on your AI coding agents";
     longDescription = ''
-      Coucou shows your Claude Code, Codex, Cursor, Gemini CLI and other agent sessions
+      Mercury shows your Claude Code, Codex, Cursor, Gemini CLI and other agent sessions
       at the top of the screen, and lets you approve, answer, chat and drop files without
       leaving what you are doing. Also: Flow dictation with Parakeet offline, and a
       notetaker for your calls.
     '';
-    homepage = "https://github.com/Louis-CFM/coucou";
-    changelog = "https://github.com/Louis-CFM/coucou/blob/main/CHANGELOG.md";
+    homepage = "https://github.com/allanindrajith/Mercury";
+    changelog = "https://github.com/allanindrajith/Mercury/blob/main/CHANGELOG.md";
     # The code is MIT. The name, Mochi, the icon and the sounds are © Louis Raillé
     # (LICENSE-ASSETS.md): building and running it for yourself is allowed,
     # redistributing binaries is not without written permission. Hence `unfree`,
@@ -212,7 +212,7 @@ stdenv.mkDerivation {
         githubId = 151391647;
       }
     ];
-    mainProgram = "coucou";
+    mainProgram = "mercury";
     platforms = lib.attrNames sherpaOnnxArchives;
   };
 }

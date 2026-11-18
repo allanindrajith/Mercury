@@ -16,7 +16,7 @@ jobs:
         run: brew install xcodegen
 
       - name: Generate project
-        run: cd NotchBuddy && xcodegen
+        run: cd Mercury && xcodegen
 
       - name: Test screen geometry
         run: bash scripts/test-screen-geometry.sh
@@ -195,8 +195,8 @@ jobs:
         run: |
           set -o pipefail
           xcodebuild \
-            -project NotchBuddy/NotchBuddy.xcodeproj \
-            -scheme NotchBuddy \
+            -project Mercury/Mercury.xcodeproj \
+            -scheme Mercury \
             -configuration Release \
             build \
             CODE_SIGNING_ALLOWED=NO \
@@ -209,8 +209,8 @@ jobs:
       - name: Build App Store target (unsigned)
         run: |
           xcodebuild \
-            -project NotchBuddy/NotchBuddy.xcodeproj \
-            -scheme CoucouAppStore \
+            -project Mercury/Mercury.xcodeproj \
+            -scheme MercuryAppStore \
             -configuration Debug \
             build \
             CODE_SIGNING_ALLOWED=NO \
@@ -219,8 +219,8 @@ jobs:
       - name: Build iPhone link spike (Mac, DebugCloud, unsigned)
         run: |
           xcodebuild \
-            -project NotchBuddy/NotchBuddy.xcodeproj \
-            -scheme NotchBuddyCloud \
+            -project Mercury/Mercury.xcodeproj \
+            -scheme MercuryCloud \
             -configuration DebugCloud \
             build \
             CODE_SIGNING_ALLOWED=NO \
@@ -229,8 +229,8 @@ jobs:
       - name: Build iPhone link spike (Mac, ReleaseCloud, unsigned)
         run: |
           xcodebuild \
-            -project NotchBuddy/NotchBuddy.xcodeproj \
-            -scheme NotchBuddy \
+            -project Mercury/Mercury.xcodeproj \
+            -scheme Mercury \
             -configuration ReleaseCloud \
             build \
             CODE_SIGNING_ALLOWED=NO \
@@ -239,8 +239,8 @@ jobs:
       - name: Build iPhone app (unsigned)
         run: |
           xcodebuild \
-            -project NotchBuddy/NotchBuddy.xcodeproj \
-            -scheme CoucouPhone \
+            -project Mercury/Mercury.xcodeproj \
+            -scheme MercuryPhone \
             -destination 'generic/platform=iOS' \
             build \
             CODE_SIGNING_ALLOWED=NO

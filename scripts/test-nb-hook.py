@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Run the nb-hook relay that HookServer.swift installs against a stand-in Coucou socket.
+"""Run the nb-hook relay that HookServer.swift installs against a stand-in Mercury socket.
 
 Covers the shell wrapper on this OS (macOS: python3 behind xcode-select; elsewhere: the
 python3 in PATH, as on a server reached over SSH), the default socket path and the
-COUCOU_SOCKET override, a permission round trip, an AskUserQuestion answer, VS Code
+MERCURY_SOCKET override, a permission round trip, an AskUserQuestion answer, VS Code
 sessions on a remote machine, and that an unreachable socket never blocks the agent.
 """
 import json
@@ -20,10 +20,10 @@ import threading
 import time
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE = ROOT / "NotchBuddy/Sources/App/HookServer.swift"
+SOURCE = ROOT / "Mercury/Sources/App/HookServer.swift"
 DEFAULT_SOCKETS = {
-    "nbHookPythonGitHub": "Library/Application Support/NotchBuddy/nb.sock",
-    "nbHookPythonAppStore": "Library/Containers/fr.louisraille.Coucou/Data/nb.sock",
+    "nbHookPythonGitHub": "Library/Application Support/Mercury/nb.sock",
+    "nbHookPythonAppStore": "Library/Containers/com.mercury.app/Data/nb.sock",
 }
 
 
@@ -39,7 +39,7 @@ def swift_literal(source, name):
     return body.replace("\\\\", "\\")
 
 
-class FakeCoucou:
+class FakeMercury:
     """Listens like the app: one JSON line per connection, answers blocking requests."""
 
     def __init__(self, path):
@@ -68,7 +68,7 @@ class FakeCoucou:
                 msg = json.loads(data)
                 self.received.put(msg)
                 blocking = (msg.get("hook_event_name") == "PermissionRequest"
-                            or msg.get("coucou_kind") == "ask_user_question")
+                            or msg.get("mercury_kind") == "ask_user_question")
                 try:
                     conn.sendall((json.dumps(self.reply if blocking else {"ok": True}) + "\n").encode())
                 except OSError:
@@ -117,52 +117,52 @@ def main():
             base_env = {"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": str(home)}
             event = {"hook_event_name": "SessionStart", "session_id": "s1", "cwd": "/srv/project"}
 
-            coucou = FakeCoucou(str(home / default_socket))
+            mercury = FakeMercury(str(home / default_socket))
             out, _ = run(hook_dir, event, env=base_env)
-            check(out == "" and coucou.next().get("hook_event_name") == "SessionStart",
+            check(out == "" and mercury.next().get("hook_event_name") == "SessionStart",
                   "an event reaches the default socket")
-            coucou.close()
+            mercury.close()
 
             tunnel = str(work / f"{variant[-6:]}.sock")
-            coucou = FakeCoucou(tunnel)
-            env = dict(base_env, COUCOU_SOCKET=tunnel)
+            mercury = FakeMercury(tunnel)
+            env = dict(base_env, MERCURY_SOCKET=tunnel)
             run(hook_dir, event, env=env)
-            check(coucou.next().get("session_id") == "s1", "COUCOU_SOCKET points the relay at another socket")
+            check(mercury.next().get("session_id") == "s1", "MERCURY_SOCKET points the relay at another socket")
 
-            coucou.reply = {"permissionDecision": "allow"}
+            mercury.reply = {"permissionDecision": "allow"}
             request = dict(event, hook_event_name="PermissionRequest", tool_name="Bash",
                            tool_input={"command": "ls"})
             out, _ = run(hook_dir, request, env=env)
-            coucou.next()
+            mercury.next()
             check(json.loads(out)["hookSpecificOutput"]["decision"]["behavior"] == "allow",
                   "a permission decision comes back to the agent")
 
-            coucou.reply = {"permissionDecision": "answer", "answers": {"Which one?": "First"}}
+            mercury.reply = {"permissionDecision": "answer", "answers": {"Which one?": "First"}}
             ask = dict(event, hook_event_name="PreToolUse", tool_name="AskUserQuestion",
                        tool_input={"questions": [{"question": "Which one?", "header": "Pick",
                                                   "options": [{"label": "First"}, {"label": "Second"}],
                                                   "multiSelect": False}]})
             out, _ = run(hook_dir, ask, args=("--ask",), env=env)
-            coucou.next()
+            mercury.next()
             check(json.loads(out)["hookSpecificOutput"]["updatedInput"]["answers"] == {"Which one?": "First"},
                   "an answer from the notch comes back to the agent")
 
             vscode = dict(env, CLAUDE_CODE_ENTRYPOINT="claude-vscode")
             run(hook_dir, event, env=vscode)
-            check(coucou.next().get("term_program") == "vscode", "a remote VS Code session goes to the VS Code pill")
-            coucou.reply = {"permissionDecision": "ask"}
+            check(mercury.next().get("term_program") == "vscode", "a remote VS Code session goes to the VS Code pill")
+            mercury.reply = {"permissionDecision": "ask"}
             run(hook_dir, ask, args=("--ask",), env=vscode)
-            check(coucou.next().get("term_program") == "vscode", "so does its question")
+            check(mercury.next().get("term_program") == "vscode", "so does its question")
             run(hook_dir, event, env=dict(vscode, TERM_PROGRAM="iTerm.app"))
-            check(coucou.next().get("term_program") == "iTerm.app", "a real TERM_PROGRAM is kept")
+            check(mercury.next().get("term_program") == "iTerm.app", "a real TERM_PROGRAM is kept")
             run(hook_dir, event, env=dict(vscode, __CFBundleIdentifier="com.todesktop.230313mzl4w4u92"))
-            check(coucou.next().get("term_program") == "", "an editor with a bundle ID is left to it")
+            check(mercury.next().get("term_program") == "", "an editor with a bundle ID is left to it")
             run(hook_dir, event, env=dict(env, CLAUDE_CODE_ENTRYPOINT="sdk-ts"))
-            check(coucou.next().get("term_program") == "", "other entrypoints are not taken for VS Code")
-            coucou.close()
+            check(mercury.next().get("term_program") == "", "other entrypoints are not taken for VS Code")
+            mercury.close()
 
-            out, took = run(hook_dir, request, env=dict(env, COUCOU_SOCKET=str(work / "none.sock")))
-            check(out == "" and took < 5, f"no Coucou: the permission request goes back at once ({took:.2f} s)")
+            out, took = run(hook_dir, request, env=dict(env, MERCURY_SOCKET=str(work / "none.sock")))
+            check(out == "" and took < 5, f"no Mercury: the permission request goes back at once ({took:.2f} s)")
 
             # No python3 (Linux) or no xcode-select (macOS) in PATH: the wrapper stays quiet.
             bare = work / f"bin-{variant}"

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """What's new after an update: every release must bring its entry.
 
-Coucou shows, once after it updated itself, what the new version brings (an icon, a title and a
+Mercury shows, once after it updated itself, what the new version brings (an icon, a title and a
 line per item, in every language the app speaks). The entries live in
-  NotchBuddy/Resources/whats-new.json   (Mac, the 16 languages of Localizable.xcstrings)
+  Mercury/Resources/whats-new.json   (Mac, the 16 languages of Localizable.xcstrings)
   windows/src/whats-new/whats-new.json  (Windows and Linux, the languages of strings.json)
 This test fails when the version the app is about to ship has no entry, or an entry is
 incomplete. release.sh runs it too, so a release can't go out without its "What's new".
@@ -38,8 +38,8 @@ def fail(msg):
 
 
 def mac_version():
-    text = (ROOT / "NotchBuddy/project.yml").read_text(encoding="utf-8")
-    # The first target is the GitHub app (NotchBuddy); the App Store build has its own numbers.
+    text = (ROOT / "Mercury/project.yml").read_text(encoding="utf-8")
+    # The first target is the GitHub app (Mercury); the App Store build has its own numbers.
     m = re.search(r'CFBundleShortVersionString:\s*"([0-9.]+)"', text)
     return m.group(1)
 
@@ -116,7 +116,7 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8")
     only = sys.argv[1] if len(sys.argv) > 1 else None
     if only in (None, "mac"):
-        check("Mac", ROOT / "NotchBuddy/Resources/whats-new.json", mac_version(), MAC_LANGS)
+        check("Mac", ROOT / "Mercury/Resources/whats-new.json", mac_version(), MAC_LANGS)
     if only in (None, "windows"):
         check("Windows and Linux", ROOT / "windows/src/whats-new/whats-new.json", windows_version(), windows_langs())
     if failures:
