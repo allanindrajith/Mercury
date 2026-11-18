@@ -198,7 +198,7 @@ private struct RecapSharePanelView: View {
 struct RecapShareImageView: View {
     /// Where people can find Mercury, printed under the shared image.
     #if APPSTORE
-    static let footer = "Mercury · louis-cfm.github.io/mercury"
+    static let footer = "Mercury · allanindrajith.github.io/Mercury"
     #else
     static let footer = "Mercury · github.com/allanindrajith/Mercury"
     #endif

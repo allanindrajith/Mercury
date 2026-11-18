@@ -1,8 +1,8 @@
 # Mercury — name, character and artwork
 
-Copyright (c) 2026 Louis Raillé. All rights reserved, except as stated below.
+Copyright (c) 2026 Allan Indrajith. All rights reserved, except as stated below.
 
-The [MIT License](LICENSE) covers the **source code** of Mercury. It does **not** cover the brand and the artwork listed here, which remain the property of Louis Raillé:
+The [MIT License](LICENSE) covers the **source code** of Mercury. It does **not** cover the brand and the artwork listed here, which remain the property of Allan Indrajith:
 
 - the names **“Mercury”** and **“Mochi”**;
 - the **Mochi character** — its design, look, expressions and animations as a character;
@@ -30,4 +30,4 @@ If you fork Mercury to ship your own app, that's welcome under the MIT License: 
 
 ## Questions or permission requests
 
-Open an issue on [GitHub](https://github.com/allanindrajith/Mercury/issues) or write to raillelouis@gmail.com.
+Open an issue on [GitHub](https://github.com/allanindrajith/Mercury/issues).

@@ -120,8 +120,6 @@ The Mac app does the work; the iPhone app keeps you in the loop when you step aw
 
 **Get it on your iPhone in 3 steps:** install Mercury on your iPhone ([Join the TestFlight beta](https://testflight.apple.com/join/3GpeHv2b) — free, App Store coming soon), turn on **Settings → General → iPhone** in the Mac app (0.1.9 or later), and use the same Apple Account in iCloud on both. Full guide, troubleshooting and build-it-yourself: [docs/IPHONE.md](docs/IPHONE.md).
 
-> 📱 Want Mercury on the *back* of your iPhone too? That's [Botan](https://louisraille.fr/botan): the founders list is open.
-
 ## Mercury for Android
 
 **Mercury for Android** brings Mercury to Android phones. It was built by [Rhytam Biswas (@Rhytam23)](https://github.com/Rhytam23) and lives in [`android/`](android/).
@@ -241,7 +239,7 @@ Everything else, troubleshooting included, is in [`android/README.md`](android/R
 ### Homebrew (macOS)
 
 ```bash
-brew tap louis-cfm/mercury https://github.com/allanindrajith/Mercury
+brew tap allanindrajith/mercury https://github.com/allanindrajith/Mercury
 brew install --cask mercury
 ```
 
@@ -551,7 +549,7 @@ Want to add or improve a translation? Open a PR with changes to `Mercury/Resourc
 
 ## Credits
 
-Built by [Louis Raillé](https://louisraille.fr) with Claude Code. Next up: [Botan](https://louisraille.fr/botan), Mercury in real life.
+Maintained by [Allan Indrajith](https://github.com/allanindrajith).
 Mercury for Android and the phone link by [Rhytam Biswas (@Rhytam23)](https://github.com/Rhytam23).
 Thanks to everyone who sent a pull request — see [contributors](https://github.com/allanindrajith/Mercury/graphs/contributors).
 Inspired by the notch-companion concepts shared by design studios — this project is independent and not affiliated with any of them.
@@ -559,12 +557,12 @@ Inspired by the notch-companion concepts shared by design studios — this proje
 ## License
 
 - **Code:** [MIT](LICENSE) — use it, fork it, learn from it, just keep the copyright notice. The Android app and the phone link are © Rhytam Biswas, also under MIT ([android/LICENSE](android/LICENSE)).
-- **Name, Mercury character, icon, sounds and media:** © Louis Raillé, all rights reserved — see [LICENSE-ASSETS.md](LICENSE-ASSETS.md). Shipping your own fork? Give it your own name and character.
+- **Name, Mercury character, icon, sounds and media:** © Allan Indrajith, all rights reserved — see [LICENSE-ASSETS.md](LICENSE-ASSETS.md). Shipping your own fork? Give it your own name and character.
 
 <div align="center">
 
 **If Mercury made you smile, a ⭐ helps a lot.**
 
-[Website](https://allanindrajith.github.io/Mercury/) · [Botan](https://louisraille.fr/botan) · [Privacy](https://allanindrajith.github.io/Mercury/privacy.html) · [Terms](https://allanindrajith.github.io/Mercury/terms.html) · [Support](https://allanindrajith.github.io/Mercury/support.html)
+[Website](https://allanindrajith.github.io/Mercury/) · [Privacy](https://allanindrajith.github.io/Mercury/privacy.html) · [Terms](https://allanindrajith.github.io/Mercury/terms.html) · [Support](https://allanindrajith.github.io/Mercury/support.html)
 
 </div>
