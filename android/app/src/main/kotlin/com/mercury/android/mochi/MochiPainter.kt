@@ -89,6 +89,7 @@ object MochiPainter {
             if (head != null && outfitCtx != null) drawOutfitBehind(outfitCtx, e.outfit, head, outfitState)
 
             val body = bodyPath(e, rx, ry, r)
+            if (e.morph < 0.95) drawMercuryWings(c, e, nowSec, rx, ry, r)
             drawBody(c, e, body, r, rx, ry)
 
             val blushVal = max(e.blush, e.tint * 0.5) * (1 - e.morph)
@@ -118,6 +119,49 @@ object MochiPainter {
             val badge = e.badge
             if (badge != null && e.badgeS > 0.01 && e.morph < 0.25) drawBadge(c, e, nowSec, badge, r, cx, cy)
             drawParticles(c, e, r, cx, cy)
+        }
+    }
+
+    private fun drawMercuryWings(c: Canvas, e: MochiEngine, nowSec: Double, rx: Double, ry: Double, r: Double) {
+        val vis = (1.0 - e.morph).coerceAtLeast(0.0)
+        if (vis <= 0.02) return
+        val flap = when {
+            e.state == BotState.SLEEPING || e.state == BotState.DIZZY -> -0.18
+            e.isDancing || e.state == BotState.WORKING || e.state == BotState.THINKING || e.state == BotState.SEARCHING || e.state == BotState.FINISHED ->
+                sin(nowSec * 7.5) * 0.24
+            else -> sin(nowSec * 2.1) * 0.08
+        }
+        val bc = e.bodyColor
+        val topC = if (bc != null) bc.color((0.92 * vis).toFloat()) else Color(246, 250, 255, (255 * 0.95 * vis).toInt())
+        val botC = if (bc != null) bc.color((0.70 * vis).toFloat()) else Color(190, 210, 241, (255 * 0.92 * vis).toInt())
+        val w = (r * 0.56).toFloat()
+        val h = (r * 0.44).toFloat()
+        for (side in intArrayOf(-1, 1)) {
+            val s = side.toFloat()
+            c.save()
+            c.translate((s * rx * 0.76).toFloat(), (-ry * 0.42).toFloat())
+            c.rotate(((side * (-0.28 + flap)) * 180.0 / PI).toFloat())
+            val wing = Path().apply {
+                moveTo(0f, h * 0.18f)
+                cubicTo(s * w * 0.25f, -h * 0.55f, s * w * 0.78f, -h * 0.95f, s * w, -h * 0.82f)
+                cubicTo(s * w * 0.98f, -h * 0.50f, s * w * 0.82f, -h * 0.25f, s * w * 0.62f, -h * 0.18f)
+                cubicTo(s * w * 0.85f, -h * 0.14f, s * w * 0.86f, h * 0.02f, s * w * 0.72f, h * 0.04f)
+                cubicTo(s * w * 0.52f, h * 0.24f, s * w * 0.22f, h * 0.34f, 0f, h * 0.34f)
+                close()
+            }
+            val fillP = Paint().apply {
+                isAntiAlias = true
+                shader = LinearGradientShader(Offset(0f, -h), Offset(0f, h * 0.4f), listOf(topC, botC))
+            }
+            c.drawPath(wing, fillP)
+            val strokeP = Paint().apply {
+                isAntiAlias = true
+                style = PaintingStyle.Stroke
+                strokeWidth = 1f
+                color = Color(0f, 0f, 0f, (0.08 * vis).toFloat())
+            }
+            c.drawPath(wing, strokeP)
+            c.restore()
         }
     }
 

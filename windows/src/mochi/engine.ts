@@ -67,8 +67,8 @@ const EYE_W = 0.25;
 const EYE_H = 0.27;
 const EYE_SP = 0.37;
 const EYE_P = -0.12;
-const BASE_TOP: RGB = [0.929, 0.929, 0.937]; // #EDEDEF
-const BASE_BOTTOM: RGB = [0.769, 0.773, 0.792]; // #C4C5CA
+const BASE_TOP: RGB = [0.949, 0.965, 0.988]; // #F2F6FC
+const BASE_BOTTOM: RGB = [0.784, 0.847, 0.941]; // #C8D8F0
 const INK = "rgb(26,20,18)"; // #1A1412
 const MINI_INK = "rgb(16,19,26)"; // #10131A
 
@@ -823,6 +823,7 @@ export class BotEngine {
     if (head) drawOutfitBehind(x, this.outfit, head, outfitState);
 
     const body = this.bodyPath(rx, ry, R);
+    if (this.morph < 0.95) this.drawMercuryWings(x, rx, ry, R);
     this.drawBody(x, body, R, rx, ry);
 
     const blushVal = Math.max(this.blush, this.tint * 0.5) * (1 - this.morph);
@@ -879,6 +880,43 @@ export class BotEngine {
     }
     p.closePath();
     return p;
+  }
+
+  private drawMercuryWings(x: CanvasRenderingContext2D, rx: number, ry: number, R: number) {
+    const vis = Math.max(0, 1 - this.morph);
+    if (vis <= 0.02) return;
+    const t = performance.now() / 1000;
+    let flap = Math.sin(t * 2.1) * 0.08;
+    if (this.state === "sleeping" || this.state === "dizzy") {
+      flap = -0.18;
+    } else if (this.isDancing || this.state === "working" || this.state === "thinking" || this.state === "searching" || this.state === "finished") {
+      flap = Math.sin(t * 7.5) * 0.24;
+    }
+    const topC = this.bodyColor ? rgba(this.bodyColor, 0.92 * vis) : `rgba(246,250,255,${0.95 * vis})`;
+    const botC = this.bodyColor ? rgba(this.bodyColor, 0.70 * vis) : `rgba(190,210,241,${0.92 * vis})`;
+    const w = R * 0.56;
+    const h = R * 0.44;
+    for (const side of [-1, 1]) {
+      x.save();
+      x.translate(side * rx * 0.76, -ry * 0.42);
+      x.rotate(side * (-0.28 + flap));
+      x.beginPath();
+      x.moveTo(0, h * 0.18);
+      x.bezierCurveTo(side * w * 0.25, -h * 0.55, side * w * 0.78, -h * 0.95, side * w, -h * 0.82);
+      x.bezierCurveTo(side * w * 0.98, -h * 0.50, side * w * 0.82, -h * 0.25, side * w * 0.62, -h * 0.18);
+      x.bezierCurveTo(side * w * 0.85, -h * 0.14, side * w * 0.86, h * 0.02, side * w * 0.72, h * 0.04);
+      x.bezierCurveTo(side * w * 0.52, h * 0.24, side * w * 0.22, h * 0.34, 0, h * 0.34);
+      x.closePath();
+      const g = x.createLinearGradient(0, -h, 0, h * 0.4);
+      g.addColorStop(0, topC);
+      g.addColorStop(1, botC);
+      x.fillStyle = g;
+      x.fill();
+      x.strokeStyle = `rgba(0,0,0,${0.08 * vis})`;
+      x.lineWidth = 1;
+      x.stroke();
+      x.restore();
+    }
   }
 
   /** How much of the pumpkin's orange shows on the body (it comes and goes with the outfit). */

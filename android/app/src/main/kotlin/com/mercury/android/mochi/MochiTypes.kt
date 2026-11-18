@@ -41,8 +41,8 @@ object MochiConst {
     const val EYE_H = 0.27
     const val EYE_SP = 0.37
     const val EYE_P = -0.12
-    val BASE_TOP = Rgb(0.929, 0.929, 0.937)    // #EDEDEF
-    val BASE_BOTTOM = Rgb(0.769, 0.773, 0.792) // #C4C5CA
+    val BASE_TOP = Rgb(0.949, 0.965, 0.988)    // #F2F6FC
+    val BASE_BOTTOM = Rgb(0.784, 0.847, 0.941) // #C8D8F0
 
     val C_IDLE = Rgb(0.902, 0.914, 0.933)
     val C_WORKING = Rgb(0.231, 0.62, 1.0)

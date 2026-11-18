@@ -25,7 +25,7 @@ final class LiveActivityRelay {
     /// Overrides the relay address (defaults write com.mercury.app phoneRelayURL <url>).
     static let relayURLKey = "phoneRelayURL"
     /// The deployed relay (relay/README.md).
-    static let defaultRelayURL = "https://mercury-relay.raillelouis.workers.dev"
+    static let defaultRelayURL = "https://mercury-relay.mercury-relay.workers.dev"
 
     static var isEnabled: Bool { UserDefaults.standard.bool(forKey: enabledKey) }
 

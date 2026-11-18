@@ -190,10 +190,9 @@ export function releasePage(platform: "windows" | "linux", version: string): str
 }
 
 /** Buy Mochi a coffee: the same Stripe link as the Mercury page (docs/index.html). */
-export const COFFEE_URL = "https://buy.stripe.com/dRm6oGbfa7Kqcqs0hxes003";
+export const COFFEE_URL = "https://github.com/allanindrajith/Mercury";
 
-/** Botan, Mochi out of the notch: the founders list (same link as the Mercury page and the Mac). */
-export const BOTAN_URL = "https://louisraille.fr/botan";
+export const BOTAN_URL = "https://github.com/allanindrajith/Mercury";
 
 /** The blue of an update, and of the arrow badge. */
 export const UPDATE_BLUE = "#3B82F6";

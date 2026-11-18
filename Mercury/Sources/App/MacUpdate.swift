@@ -7,7 +7,7 @@ import Foundation
 
 enum MacUpdate {
     static let owner = "allanindrajith"
-    static let repo = "mercury"
+    static let repo = "Mercury"
     static let releasesURL = URL(string: "https://api.github.com/repos/\(owner)/\(repo)/releases?per_page=20")!
     /// What the downloaded app must be signed as: Mercury's bundle id, Louis's Developer ID team.
     static let bundleId = "com.mercury.app"

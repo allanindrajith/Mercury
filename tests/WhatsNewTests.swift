@@ -68,7 +68,7 @@ enum WhatsNewTests {
         }
 
         print("\nLinks")
-        check("coffee goes to Stripe", WhatsNew.coffeeURL.host == "buy.stripe.com")
+        check("coffee goes to GitHub", WhatsNew.coffeeURL.host == "github.com")
         check("release page", WhatsNew.releasePage("0.6.0").absoluteString == "https://github.com/allanindrajith/Mercury/releases/tag/v0.6.0")
 
         if failures > 0 {

@@ -81,8 +81,8 @@ enum MochiConst {
     static let eyeH: CGFloat  = 0.27
     static let eyeSp: CGFloat = 0.37
     static let eyeP: CGFloat  = -0.12
-    static let baseTop    = CGColor(red: 0.929, green: 0.929, blue: 0.937, alpha: 1)  // #EDEDEF
-    static let baseBottom = CGColor(red: 0.769, green: 0.773, blue: 0.792, alpha: 1)  // #C4C5CA
+    static let baseTop    = CGColor(red: 0.949, green: 0.965, blue: 0.988, alpha: 1)  // #F2F6FC
+    static let baseBottom = CGColor(red: 0.784, green: 0.847, blue: 0.941, alpha: 1)  // #C8D8F0
     static let ink        = CGColor(red: 0.102, green: 0.082, blue: 0.071, alpha: 1)  // #1A1412
     static let miniInk    = CGColor(red: 0.063, green: 0.075, blue: 0.102, alpha: 1)  // #10131A
 }
@@ -1141,8 +1141,13 @@ final class BotEngine: ObservableObject {
         if tilt != 0 { ctx.rotate(by: .radians(tilt)) }
         ctx.scaleBy(x: sx, y: sy)
 
-        // Body path (superellipse for Mochi, morph to rect for upload)
+        // Body path (superellipse for Mercury mascot, morph to rect for upload)
         let bodyPath = mochiPath(rx: rx, ry: ry, morph: morph, R: R)
+
+        // Animated Mercury Hermes wings behind the body
+        if morph < 0.95 {
+            drawMercuryWings(ctx: &ctx, rx: rx, ry: ry, R: R)
+        }
 
         // Body fill
         drawBody(ctx: &ctx, path: bodyPath, R: R, rx: rx, ry: ry,
@@ -1449,15 +1454,78 @@ final class BotEngine: ObservableObject {
         return CGPoint(x: kx * W, y: ky * H)
     }
 
+    /// Animated Mercury Hermes wings drawn behind the upper-left and upper-right edges of the body.
+    private func drawMercuryWings(ctx: inout GraphicsContext, rx: CGFloat, ry: CGFloat, R: CGFloat) {
+        let vis = max(0, 1 - morph)
+        guard vis > 0.02 else { return }
+
+        let t = CGFloat(CFAbsoluteTimeGetCurrent())
+        let flap: CGFloat
+        if state == .sleeping || state == .dizzy {
+            flap = -0.18
+        } else if isDancing || state == .working || state == .thinking || state == .searching || state == .finished {
+            flap = sin(t * 7.5) * 0.24
+        } else {
+            flap = sin(t * 2.1) * 0.08
+        }
+
+        let topColor = bodyColor.map { Color(cgColor: $0).opacity(0.92 * Double(vis)) }
+            ?? Color(red: 0.965, green: 0.980, blue: 1.0, opacity: 0.95 * Double(vis))
+        let botColor = bodyColor.map { Color(cgColor: $0).opacity(0.70 * Double(vis)) }
+            ?? Color(red: 0.745, green: 0.824, blue: 0.945, opacity: 0.92 * Double(vis))
+
+        for side in [-1.0, 1.0] as [CGFloat] {
+            var wCtx = ctx
+            let anchorX = side * rx * 0.76
+            let anchorY = -ry * 0.42
+            wCtx.translateBy(x: anchorX, y: anchorY)
+            wCtx.rotate(by: .radians(Double(side * (-0.28 + flap))))
+
+            var wing = Path()
+            let s = side
+            let w = R * 0.56
+            let h = R * 0.44
+            wing.move(to: CGPoint(x: 0, y: h * 0.18))
+            wing.addCurve(
+                to: CGPoint(x: s * w, y: -h * 0.82),
+                control1: CGPoint(x: s * w * 0.25, y: -h * 0.55),
+                control2: CGPoint(x: s * w * 0.78, y: -h * 0.95)
+            )
+            wing.addCurve(
+                to: CGPoint(x: s * w * 0.62, y: -h * 0.18),
+                control1: CGPoint(x: s * w * 0.98, y: -h * 0.50),
+                control2: CGPoint(x: s * w * 0.82, y: -h * 0.25)
+            )
+            wing.addCurve(
+                to: CGPoint(x: s * w * 0.72, y: h * 0.04),
+                control1: CGPoint(x: s * w * 0.85, y: -h * 0.14),
+                control2: CGPoint(x: s * w * 0.86, y: h * 0.02)
+            )
+            wing.addCurve(
+                to: CGPoint(x: 0, y: h * 0.34),
+                control1: CGPoint(x: s * w * 0.52, y: h * 0.24),
+                control2: CGPoint(x: s * w * 0.22, y: h * 0.34)
+            )
+            wing.closeSubpath()
+
+            wCtx.fill(wing, with: .linearGradient(
+                Gradient(colors: [topColor, botColor]),
+                startPoint: CGPoint(x: 0, y: -h),
+                endPoint: CGPoint(x: 0, y: h * 0.4)
+            ))
+            wCtx.stroke(wing, with: .color(Color.black.opacity(0.08 * Double(vis))), lineWidth: 1)
+        }
+    }
+
     private func drawBody(ctx: inout GraphicsContext, path: Path, R: CGFloat, rx: CGFloat, ry: CGFloat,
                           pumpkinColors: Bool = false) {
         if let bc = bodyColor, !pumpkinColors {
             // Mini bots: flat solid fill — no gradient, no reflection, no highlight
             ctx.fill(path, with: .color(Color(cgColor: bc)))
         } else {
-            // Main bot: linear gradient body
-            let top: Color = pumpkinColors ? Color(hex: "#FFA94D") : Color(red: 0.929, green: 0.929, blue: 0.937)
-            let bot: Color = pumpkinColors ? Color(hex: "#E8590C") : Color(red: 0.769, green: 0.773, blue: 0.792)
+            // Main bot: linear gradient body (pearlescent silver-blue Mercury finish)
+            let top: Color = pumpkinColors ? Color(hex: "#FFA94D") : Color(cgColor: MochiConst.baseTop)
+            let bot: Color = pumpkinColors ? Color(hex: "#E8590C") : Color(cgColor: MochiConst.baseBottom)
             ctx.fill(path, with: .linearGradient(
                 Gradient(colors: [top, bot]),
                 startPoint: CGPoint(x: rx*0.7, y: -ry*0.85),
