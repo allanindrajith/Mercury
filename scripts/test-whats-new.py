@@ -117,8 +117,6 @@ def main():
     only = sys.argv[1] if len(sys.argv) > 1 else None
     if only in (None, "mac"):
         check("Mac", ROOT / "Mercury/Resources/whats-new.json", mac_version(), MAC_LANGS)
-    if only in (None, "windows"):
-        check("Windows and Linux", ROOT / "windows/src/whats-new/whats-new.json", windows_version(), windows_langs())
     if failures:
         print(f"\n{len(failures)} failure(s)")
         sys.exit(1)

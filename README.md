@@ -4,19 +4,15 @@
 
 # Mercury
 
-**Named after the Roman messenger god — Mercury keeps watch on your AI coding agents and services, and reports back to you from your Mac's notch, Windows/Linux island, or phone.**
+**Named after the Roman messenger god — Mercury keeps watch on your AI coding agents and services, and reports back to you from your Mac's notch and your iPhone.**
 
-Approve permissions, watch your agents work, drop a file, chat with Claude, dictate anywhere, or record calls — all without leaving what you're doing. Walk away from your Mac and Mercury follows you to your iPhone and Android: Lock Screen, Dynamic Island, widgets, Siri.
+Approve permissions, watch your agents work, drop a file, chat with Claude, dictate anywhere, or record calls — all without leaving what you're doing. Walk away from your Mac and Mercury follows you to your iPhone: Lock Screen, Dynamic Island, widgets, Siri.
 
 [![Version](https://img.shields.io/github/v/release/allanindrajith/Mercury?filter=v*&label=version&color=0A84FF)](https://github.com/allanindrajith/Mercury/releases)
 ![macOS 15+](https://img.shields.io/badge/macOS-15%2B-black?logo=apple)
 ![iOS 18+](https://img.shields.io/badge/iOS-18%2B-black?logo=apple)
-![Android 11+](https://img.shields.io/badge/Android-11%2B-3DDC84?logo=android&logoColor=white)
-![Windows 10/11](https://img.shields.io/badge/Windows-10%2F11-0078D4?logo=windows&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-AppImage%20%7C%20deb%20%7C%20rpm-FCC624?logo=linux&logoColor=black)
 ![Swift 6](https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white)
 ![SwiftUI](https://img.shields.io/badge/SwiftUI-native-0A84FF)
-![Tauri 2](https://img.shields.io/badge/Tauri-2-FFC131?logo=tauri&logoColor=black)
 ![Code: MIT](https://img.shields.io/badge/code-MIT-green)
 ![GitHub stars](https://img.shields.io/github/stars/allanindrajith/Mercury?style=social)
 
@@ -120,19 +116,6 @@ The Mac app does the work; the iPhone app keeps you in the loop when you step aw
 
 **Get it on your iPhone in 3 steps:** install Mercury on your iPhone ([Join the TestFlight beta](https://testflight.apple.com/join/3GpeHv2b) — free, App Store coming soon), turn on **Settings → General → iPhone** in the Mac app (0.1.9 or later), and use the same Apple Account in iCloud on both. Full guide, troubleshooting and build-it-yourself: [docs/IPHONE.md](docs/IPHONE.md).
 
-## Mercury for Android
-
-**Mercury for Android** brings Mercury to Android phones. It was built by [Rhytam Biswas (@Rhytam23)](https://github.com/Rhytam23) and lives in [`android/`](android/).
-
-- 🔐 **Approve from your phone** — a permission request rises over any screen, even on a locked phone; **Allow** needs your fingerprint or screen lock, **Deny** doesn't. A command too long to show in full can only be allowed on the computer.
-- 🧑‍💻 **Your agents at a glance** — the agent that needs you, the others below, plan usage and your services when the computer shares them.
-- 💬 **Answers and chat** — answer Claude Code's questions and chat through the computer's own AI keys (the keys never leave the computer).
-- 🏝️ **An island over other apps** *(optional)* — a black island drops from the camera cut-out while an agent works, plus a quick-settings tile and an ongoing notification.
-- 🧩 **Home-screen widgets** — nine of them, from a tiny Mercury to a big card with plan usage and quick buttons. Orange when something waits for you, blue while it works, green when it's done. Read-only: a request is always decided in the app.
-- 🔒 **Local and private** — the phone talks straight to your computer on your Wi-Fi, paired with a QR code and a pinned certificate. The phone link is **off by default**, and nothing listens until you turn it on.
-
-**Status:** tested on a real phone (Android 13) with the Windows app. The phone link is in **Mercury 0.4.0 for Windows and Linux**. Download the signed APK from the [latest Android release](https://github.com/allanindrajith/Mercury/releases/tag/android-v0.3.0). Android needs Mercury on **Windows or Linux** (not the Mac), Android 11 or later, and both on the same Wi-Fi. Full guide: [`android/README.md`](android/README.md).
-
 <table>
 <tr>
 <td><img src="docs/media/claude-code.png" alt="Claude Code session"></td>
@@ -177,33 +160,6 @@ macOS releases are published as `v*` tags. See [CHANGELOG.md](CHANGELOG.md) for 
 | [0.1.1](https://github.com/allanindrajith/Mercury/releases/tag/v0.1.1) | Oct 2, 2026 | Gemini and OpenAI chat, Linux build, more agents and pills, security hardening |
 | [0.1.0](https://github.com/allanindrajith/Mercury/releases/tag/v0.1.0) | Sep 27, 2026 | First release: Mercury, Claude Code sessions, chat, file drop, integrations |
 
-Windows and Linux are released together, under the `windows-v*` and `linux-v*` tags. The newest Windows installer is always at [`windows-latest`](https://github.com/allanindrajith/Mercury/releases/tag/windows-latest), the newest Linux AppImage at [`linux-latest`](https://github.com/allanindrajith/Mercury/releases/tag/linux-latest).
-
-| Windows & Linux | Date | Highlights |
-|---------|------|------------|
-| 0.5.9 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.9) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.9) | Nov 3, 2026 | The island never disappears (Mercury or the time when closed), ✕ to fold it, dictation keeps your language, your own dictation key, silence while you speak |
-| 0.5.8 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.8) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.8) | Oct 31, 2026 | 14 fixes and features by @Ohualtex: permission requests queue, Claude Desktop cards and pill, plan usage in the compact island, Flow pill in a corner |
-| 0.5.7 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.7) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.7) | Oct 31, 2026 | Mail with classic Outlook on Windows: search, filters, automatic sorting, mail plans from the chat; search the settings |
-| 0.5.6 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.6) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.6) | Oct 30, 2026 | Chat on your own AI subscription (Claude Code, Antigravity, Gemini CLI, Codex, Cursor, Copilot); Korean and Japanese |
-| 0.5.5 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.5) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.5) | Oct 29, 2026 | No API key? Your own Claude Code answers the chat, Flow's clean-up and the notes of a call, on your Claude plan |
-| 0.5.4 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.4) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.4) | Oct 29, 2026 | Reliability: 25 community fixes — the hook server never gives up, approval cards go when the terminal takes over, a sturdier Flow pill, WhatsApp group names |
-| 0.5.3 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.3) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.3) | Oct 22, 2026 | WhatsApp in the island (experimental): one-click gateway install, your chats and replies |
-| 0.5.2 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.2) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.2) | Oct 22, 2026 | Mercury turns blue when a new version waits, What's new after each update; GitLab and Gitea pills; the weekly recap on Android |
-| 0.5.1 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.1) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.1) | Oct 20, 2026 | New version in the island, one click to install it on Windows; German and Turkish; an optional clock; Linux idle CPU fixed |
-| 0.5.0 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.5.0) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.5.0) | Oct 15, 2026 | Catches up with the Mac: the Mercury window, Flow dictation with Parakeet offline (X11 and Wayland), the Notetaker, « OK Mercury » |
-| 0.4.0 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.4.0) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.4.0) | Oct 11, 2026 | Your Android phone: the link for Mercury for Android, by @Rhytam23 — approvals with your fingerprint, answers, chat, off by default |
-| 0.3.0 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.3.0) · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.3.0) | Oct 9, 2026 | Linux catches up: Spotify with Mercury dancing, global shortcuts on Wayland, Open terminal brings the terminal back; open on hover, your own sounds, a colour per Mercury |
-| 0.2.0 · [Windows](https://github.com/allanindrajith/Mercury/releases/tag/windows-v0.2.0) | Oct 8, 2026 | Catches up with the Mac: nine agents with approvals, chat with any AI, plan usage, GitHub, wardrobe, 10 languages |
-| 0.1.1 · [Linux](https://github.com/allanindrajith/Mercury/releases/tag/linux-v0.1.1) | Oct 1, 2026 | First Linux build (beta) |
-
-Mercury for Android, by [@Rhytam23](https://github.com/Rhytam23), is released under the `android-v*` tags.
-
-| Android | Date | Highlights |
-|---------|------|------------|
-| [0.3.0](https://github.com/allanindrajith/Mercury/releases/tag/android-v0.3.0) | Oct 22, 2026 | A light theme and your phone's colours, nine more languages (Arabic right to left), quick actions, a Team widget, Share to Mercury, the weekly recap, a per-agent mute |
-| [0.2.0](https://github.com/allanindrajith/Mercury/releases/tag/android-v0.2.0) | Oct 13, 2026 | Nine home-screen widgets: Mercury, your agents, plan usage and quick buttons, coloured by state |
-| [0.1.0](https://github.com/allanindrajith/Mercury/releases/tag/android-v0.1.0) | Oct 11, 2026 | First release: your agents, approvals with your fingerprint, answers and chat, linked to Windows or Linux |
-
 ## Demo mode
 
 No API key, no Claude Code, no setup — open **Settings → General → Demo**, click **Try demo mode**, and Mercury walks through a scripted session: a Claude Code session with live steps and a diff you can read, a permission request, an AskUserQuestion, a parallel Codex session, the GitHub, Stripe, Vercel and other integration pills loaded with sample data, the chat with a streamed response, the weekly recap with a share image you can actually save.
@@ -227,14 +183,6 @@ The App Store build of the Mac app runs in Apple's sandbox, so some features sta
 4. Open Mercury on the iPhone, allow notifications, and start a Claude Code session on the Mac.
 
 Everything else, troubleshooting included, is in [docs/IPHONE.md](docs/IPHONE.md).
-
-### Android
-
-1. **Download** `Mercury-Android-0.3.0.apk` from the [release page](https://github.com/allanindrajith/Mercury/releases/tag/android-v0.3.0) on your phone (Android 11 or later) and open it. Android asks once to allow installs from your browser or file manager. You can also [build it from source](#build-from-source).
-2. **On your computer**, install Mercury **0.4.0 or later** for [Windows](#windows) or [Linux](#linux): **Settings → Android phone**, turn on **Phone link**. If Windows asks about the firewall, allow Mercury on private networks.
-3. **Show pairing code** and scan it with the app. The phone and the computer must be on the same Wi-Fi.
-
-Everything else, troubleshooting included, is in [`android/README.md`](android/README.md).
 
 ### Homebrew (macOS)
 
@@ -522,24 +470,6 @@ The macOS app is native Swift 6 / SwiftUI / AppKit with **zero third-party depen
 - A native SwiftUI app sharing Mercury's engine, the pills and the diff engine with the Mac through `MercuryKit`.
 - The Mac publishes sessions, turns and services to a private CloudKit zone in your iCloud (sensitive fields encrypted with your iCloud keys); the iPhone reads them and writes back decisions, answers and instructions, which the Mac only applies when they match what it is waiting on.
 - Live Activities are started and updated by APNs pushes through [`relay/`](relay/), a stateless Cloudflare Worker that holds the APNs key and only sees the agent's name and state.
-
-**Windows**
-
-- A [Tauri 2](https://tauri.app) app (Rust + TypeScript): the island is a transparent, always-on-top window that never steals focus, Mercury is drawn in Canvas 2D with the same shapes, timings and sounds as on the Mac.
-- Claude Code hooks go through a tiny `mercury-hook.exe` and a named pipe; keys live in Windows Credential Manager.
-- Details and differences in [`windows/README.md`](windows/README.md).
-
-**Linux**
-
-- The same Tauri app as Windows. On Wayland the island is a gtk-layer-shell
-  overlay anchored to the top edge, and click-through is its input region.
-- Claude Code hooks go through the same `mercury-hook`, over a Unix socket in
-  `$XDG_RUNTIME_DIR`; keys live in the Secret Service.
-
-**Android**
-
-- A native Kotlin and Jetpack Compose app; Mercury is drawn in code, ported from the Windows app, with his outfits and sounds.
-- The phone link (`windows/src-tauri/src/phone_link`) is an opt-in server in the Windows and Linux app, on your local network only: TLS with a certificate pinned at pairing, a pairing code that "Pair again" replaces (and disconnects every phone), and approvals bound to the exact request the computer is waiting on. The protocol is in [`docs/ANDROID_LINK.md`](docs/ANDROID_LINK.md).
 
 ## Contributing
 
