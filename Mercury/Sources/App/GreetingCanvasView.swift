@@ -342,8 +342,8 @@ private func mochiPath(hw: CGFloat, hh: CGFloat) -> CGPath {
 private func whiteFill(_ ctx: CGContext, _ path: CGPath,
                        x0: CGFloat, y0: CGFloat, x1: CGFloat, y1: CGFloat) {
     let cs = CGColorSpaceCreateDeviceRGB()
-    let c0 = CGColor(red: 251/255, green: 251/255, blue: 252/255, alpha: 1)
-    let c1 = CGColor(red: 231/255, green: 233/255, blue: 236/255, alpha: 1)
+    let c0 = CGColor(red: 242/255, green: 246/255, blue: 252/255, alpha: 1)
+    let c1 = CGColor(red: 200/255, green: 216/255, blue: 240/255, alpha: 1)
     guard let g = CGGradient(colorsSpace: cs, colors: [c0,c1] as CFArray, locations: [0,1]) else { return }
     ctx.saveGState()
     ctx.addPath(path); ctx.clip()
@@ -351,6 +351,39 @@ private func whiteFill(_ ctx: CGContext, _ path: CGPath,
                               end:   CGPoint(x: x1, y: y1),
                               options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
     ctx.restoreGState()
+}
+
+private func drawGreetingMercuryWings(_ ctx: CGContext, hw: CGFloat, hh: CGFloat) {
+    let t = CGFloat(CFAbsoluteTimeGetCurrent())
+    let flap = sin(t * 5.0) * 0.16
+    let w = hw * 0.50
+    let h = hh * 0.50
+    for side in [-1.0, 1.0] as [CGFloat] {
+        ctx.saveGState()
+        ctx.translateBy(x: side * hw * 0.76, y: -hh * 0.42)
+        ctx.rotate(by: side * (-0.28 + flap))
+        let wing = CGMutablePath()
+        wing.move(to: CGPoint(x: 0, y: h * 0.18))
+        wing.addCurve(to: CGPoint(x: side * w, y: -h * 0.82),
+                      control1: CGPoint(x: side * w * 0.25, y: -h * 0.55),
+                      control2: CGPoint(x: side * w * 0.78, y: -h * 0.95))
+        wing.addCurve(to: CGPoint(x: side * w * 0.62, y: -h * 0.18),
+                      control1: CGPoint(x: side * w * 0.98, y: -h * 0.50),
+                      control2: CGPoint(x: side * w * 0.82, y: -h * 0.25))
+        wing.addCurve(to: CGPoint(x: side * w * 0.72, y: h * 0.04),
+                      control1: CGPoint(x: side * w * 0.85, y: -h * 0.14),
+                      control2: CGPoint(x: side * w * 0.86, y: h * 0.02))
+        wing.addCurve(to: CGPoint(x: 0, y: h * 0.34),
+                      control1: CGPoint(x: side * w * 0.52, y: h * 0.24),
+                      control2: CGPoint(x: side * w * 0.22, y: h * 0.34))
+        wing.closeSubpath()
+        whiteFill(ctx, wing, x0: 0, y0: -h, x1: 0, y1: h * 0.4)
+        ctx.addPath(wing)
+        ctx.setStrokeColor(CGColor(red: 0, green: 0, blue: 0, alpha: 0.08))
+        ctx.setLineWidth(0.8)
+        ctx.strokePath()
+        ctx.restoreGState()
+    }
 }
 
 // Left hand: ball, waves (bobs vertically)
@@ -446,6 +479,8 @@ private func drawMochi(_ ctx: CGContext, p: GreetPose) {
 
     drawHandL(ctx, hw: hw, hh: hh, p: p)
     drawHandR(ctx, hw: hw, hh: hh, p: p)
+
+    drawGreetingMercuryWings(ctx, hw: hw, hh: hh)
 
     let mpath = mochiPath(hw: hw, hh: hh)
     whiteFill(ctx, mpath, x0: hw*0.6, y0: -hh, x1: -hw*0.6, y1: hh)
