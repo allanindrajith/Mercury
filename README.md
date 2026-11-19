@@ -16,7 +16,6 @@ Approve permissions, watch your agents work, drop a file, chat with Claude, dict
 ![Code: MIT](https://img.shields.io/badge/code-MIT-green)
 ![GitHub stars](https://img.shields.io/github/stars/allanindrajith/Mercury?style=social)
 
-<img src="docs/media/demo.gif" width="760" alt="Mercury in action">
 
 </div>
 
@@ -45,13 +44,9 @@ Since 0.4, Mercury has its own window and sits in the Dock. On the left, **Flow*
 - 📝 **Notetaker** — click Record a call: Mercury records your microphone and what your Mac plays, no bot joins the call. Then you get the transcript person by person, a summary, the key points and the to-dos, written by Claude with your key or by Apple Intelligence on your Mac. The audio is deleted once the transcript is written. Tell the people in the call that you record.
 - 📊 **Statistics** — words dictated, time saved, words per minute, days in a row and the apps you dictate in. Counted on your Mac, never sent anywhere.
 
-<table>
-<tr>
-<td width="33%"><img src="docs/media/hub-statistics.png" alt="Statistics: words dictated, time saved, speed, words per day and where you dictate"></td>
-<td width="33%"><img src="docs/media/hub-styles.png" alt="Styles: an optional clean-up by Claude, as said, natural or polished, per app"></td>
-<td width="33%"><img src="docs/media/hub-settings.png" alt="Settings: the key to hold, where the pill is, hands-free, paste again and cancel"></td>
-</tr>
-</table>
+<div align="center">
+<img src="docs/media/hub-settings.png" width="760" alt="Mercury Settings">
+</div>
 
 Flow dictation and the Notetaker are on the Mac for now; Windows and Linux are next.
 
@@ -114,18 +109,7 @@ The Mac app does the work; the iPhone app keeps you in the loop when you step aw
 - 🫧 **Liquid Glass, native to the bone** — SwiftUI, tabs, zoom transitions, context menus, swipe actions, alternate icons, Mercury at 120 Hz.
 - 🔒 **Through your own iCloud** — sessions sync through your private CloudKit database; project names, commands and questions are encrypted with your iCloud keys. No Mercury server sees your projects, commands or keys. Turn it on in the Mac app: Settings → General → iPhone.
 
-**Get it on your iPhone in 3 steps:** install Mercury on your iPhone ([Join the TestFlight beta](https://testflight.apple.com/join/3GpeHv2b) — free, App Store coming soon), turn on **Settings → General → iPhone** in the Mac app (0.1.9 or later), and use the same Apple Account in iCloud on both. Full guide, troubleshooting and build-it-yourself: [docs/IPHONE.md](docs/IPHONE.md).
-
-<table>
-<tr>
-<td><img src="docs/media/claude-code.png" alt="Claude Code session"></td>
-<td><img src="docs/media/stripe.png" alt="Stripe payments"></td>
-</tr>
-<tr>
-<td><img src="docs/media/chat.png" alt="Chat with Claude"></td>
-<td><img src="docs/media/dizzy.png" alt="Too many hits"></td>
-</tr>
-</table>
+**Get it on your iPhone in 3 steps:** install Mercury on your iPhone (build from source with Xcode — see [docs/IPHONE.md](docs/IPHONE.md)), turn on **Settings → General → iPhone** in the Mac app (0.1.9 or later), and use the same Apple Account in iCloud on both. Full guide, troubleshooting and build-it-yourself: [docs/IPHONE.md](docs/IPHONE.md).
 
 ## Versions
 
@@ -176,8 +160,7 @@ The App Store build of the Mac app runs in Apple's sandbox, so some features sta
 
 ### iPhone
 
-1. **Install Mercury on your iPhone** (iOS 18 or later): install [TestFlight](https://apps.apple.com/app/testflight/id899247664) from the App Store, then [Join the TestFlight beta](https://testflight.apple.com/join/3GpeHv2b). The beta is free; Apple limits it to 10,000 testers. The App Store version is coming soon.
-   *Apple is reviewing the beta: it opens within a day or two — if the link isn't accepting testers yet, check back soon.*
+1. **Install Mercury on your iPhone** (iOS 18 or later): build the `MercuryPhone` target in Xcode (`Mercury/Mercury.xcodeproj`) onto your iPhone.
 2. **On your Mac**, with Mercury 0.1.9 or later: **Settings… → General → iPhone**, turn on **Show my agent sessions on my iPhone**, and **Move Mercury to my iPhone's Dynamic Island when my Mac is locked** for the Lock Screen.
 3. **Same Apple Account** in iCloud on the Mac and the iPhone. That's the whole link: no account, no pairing code.
 4. Open Mercury on the iPhone, allow notifications, and start a Claude Code session on the Mac.

@@ -11,13 +11,13 @@ Your Mac does the work, your iPhone keeps you in the loop when you step away: yo
 | **Mac** | Mercury **0.1.9 or later** on macOS 15+: the [GitHub build](https://github.com/allanindrajith/Mercury/releases/latest), or the Mac App Store version once it is out |
 | **iPhone** | iOS 18 or later. The Lock Screen and Dynamic Island need an iPhone with a Dynamic Island for the island part; every iPhone gets the Lock Screen |
 | **iCloud** | The **same Apple Account** signed in to iCloud on the Mac and the iPhone. That's the whole link: no account to create, no server, no pairing code |
-| **Mercury on iPhone** | From the App Store (coming soon) or [Join the TestFlight beta](https://testflight.apple.com/join/3GpeHv2b) — free, up to 10,000 testers |
+| **Mercury on iPhone** | From the App Store (coming soon) or [Join the TestFlight beta](https://github.com/allanindrajith/Mercury/blob/main/docs/IPHONE.md) — free, up to 10,000 testers |
 
 ## Get it on your iPhone
 
 1. **Install Mercury on your iPhone.**
    - **App Store:** coming soon, the link will be here.
-   - **TestFlight beta:** install [TestFlight](https://apps.apple.com/app/testflight/id899247664) from the App Store, then [Join the TestFlight beta](https://testflight.apple.com/join/3GpeHv2b). The beta is free; Apple limits it to 10,000 testers.
+   - **TestFlight beta:** install [TestFlight](https://apps.apple.com/app/testflight/id899247664) from the App Store, then [Join the TestFlight beta](https://github.com/allanindrajith/Mercury/blob/main/docs/IPHONE.md). The beta is free; Apple limits it to 10,000 testers.
 2. **Update Mercury on your Mac** to 0.1.9 or later.
 3. **On the Mac:** click the Mercury icon in the menu bar → **Settings… → General → iPhone**, and turn on:
    - **Show my agent sessions on my iPhone** (required)
