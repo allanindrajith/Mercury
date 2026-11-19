@@ -1,6 +1,7 @@
 #if PHONE_LINK
 import AppKit
 import CloudKit
+import Security
 
 // MARK: - iPhone link
 //
@@ -23,8 +24,14 @@ final class CloudProbe {
     static let zoneID = CKRecordZone.ID(zoneName: "Mercury", ownerName: CKCurrentUserDefaultName)
     private static let subscriptionID = "mercury-zone-mac"
 
-    private let container = CKContainer(identifier: CloudProbe.containerID)
-    private var database: CKDatabase { container.privateCloudDatabase }
+    private static var hasICloudEntitlement: Bool {
+        guard let task = SecTaskCreateFromSelf(nil) else { return false }
+        let val = SecTaskCopyValueForEntitlement(task, "com.apple.developer.icloud-container-identifiers" as CFString, nil)
+        return val != nil
+    }
+
+    private lazy var container: CKContainer? = Self.hasICloudEntitlement ? CKContainer(identifier: CloudProbe.containerID) : nil
+    private var database: CKDatabase? { container?.privateCloudDatabase }
 
     private let launchDate = Date()
     private var ready = false
@@ -84,6 +91,10 @@ final class CloudProbe {
 
     private func start() {
         guard !started else { return }
+        guard Self.hasICloudEntitlement else {
+            log("iCloud entitlement missing (local build) — iPhone sync disabled")
+            return
+        }
         started = true
         #if DEBUG
         let build = "debug"
@@ -131,6 +142,7 @@ final class CloudProbe {
     /// Returns false (and logs why) when iCloud isn't usable yet; retried on the next tick.
     private func prepare() async -> Bool {
         if ready { return true }
+        guard let container, let database else { return false }
         do {
             let status = try await container.accountStatus()
             guard status == .available else {
@@ -159,7 +171,7 @@ final class CloudProbe {
     // MARK: Ping
 
     private func pingTick() async {
-        guard await prepare() else { return }
+        guard await prepare(), let database else { return }
         pingCount += 1
         let record = CKRecord(recordType: "Ping",
                               recordID: CKRecord.ID(recordName: UUID().uuidString, zoneID: Self.zoneID))
@@ -196,7 +208,7 @@ final class CloudProbe {
     }
 
     private func fetchChanges(source: String) async {
-        guard ready, !fetching else { return }
+        guard ready, !fetching, let database else { return }
         fetching = true
         defer { fetching = false }
         do {
